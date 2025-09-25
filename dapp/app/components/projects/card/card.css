@@ -1,0 +1,17 @@
+.card-hover-glow:hover {
+  animation: glow-shadow 0.7s ease-in-out forwards;
+}
+
+@keyframes glow-shadow {
+  0% {
+    box-shadow: 0 0 0px rgb(0, 255, 42);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(1, 226, 16, 0.6);
+    transform: scale(1.02);
+  }
+  100% {
+    box-shadow: 0 0 30px rgb(86, 197, 34);
+    transform: scale(1.02);
+  }
+}
