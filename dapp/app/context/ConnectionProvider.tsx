@@ -72,6 +72,21 @@ export const ConnectionProvider = ({ children }: Props) => {
                 setMainProvider(provider);
 
                 const signer = await provider.getSigner();
+                const network = await signer.provider.getNetwork();
+                if (Number(network.chainId) !== 296) {
+                    try {
+                        await window.ethereum.request({
+                            method: "wallet_switchEthereumChain",
+                            params: [{ chainId: "0x128" }], // 296 en hexadecimal
+                        });
+                        console.log("🔄 Switched to Hedera Testnet");
+                    } catch (err: any) {
+                        console.error("❌ Failed to switch network:", err);
+                        throw new Error("User rejected network switch or Hedera Testnet is not added");
+                    }
+
+                }
+
                 setMainSigner(signer);
 
             }

@@ -8,8 +8,8 @@ export async function POST(request: Request) {
   const { tokenAddress} = await request.json();
   console.log('tokenAddress: ',tokenAddress);
   
-  const provider = new JsonRpcProvider(process.env.SEPOLIA_RPC_URL);
-  const wallet = new Wallet(process.env.SEPOLIA_PRIVATE_KEY || '', provider);
+  const provider = new JsonRpcProvider(process.env.HEDERA_RPC_URL);
+  const wallet = new Wallet(process.env.HEDERA_PRIVATE_KEY || '', provider);
   const retireContract = new Contract(addrCarbonRetire, CarbonRetireNFT.abi, wallet);
 
   const role = keccak256(toUtf8Bytes('MINTER_ROLE'));

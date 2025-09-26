@@ -59,13 +59,16 @@ const DeployERC721 = ({ project }: Props) => {
         const deployParams = buildDeployParamsFromProject(
             project,
             account,
-           // cid,
+            // cid,
             addrGHToken,
             addrCarbonRetire,
             factoryContract
         );
         console.log("Deploy params:", deployParams);
         try {
+            const network = await mainProvider!.getNetwork();
+            console.log("🌐 Active network:", network.name, "Chain ID:", network.chainId);
+
             const res = await deployProject(deployParams);
             console.log("Deploy result:", res);
             setResult(res);
@@ -101,8 +104,8 @@ const DeployERC721 = ({ project }: Props) => {
                 onClick={handleDeploy}
                 disabled={loading || !mainProvider}
                 className={`px-4 py-2 rounded font-semibold transition ${loading || !mainProvider
-                        ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                        : 'bg-green-600 text-white hover:bg-green-700'
+                    ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                    : 'bg-green-600 text-white hover:bg-green-700'
                     }`}
             >
                 {loading ? "Deploying..." : "Tokenize"}

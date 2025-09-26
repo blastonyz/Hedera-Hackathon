@@ -4,6 +4,7 @@ import { Contract } from "ethers";
 import CarbonProjectNFT from "@contracts/CarbonProjectNFT.sol/CarbonProjectNFT.json"
 import { useState } from "react";
 import { buyBatchFunction } from "./BuyFunctions";
+import { validateTokenConnection } from "@/utils/validateChain";
 
 type Props = {
     nftAddress: string;
@@ -17,7 +18,7 @@ const BuyNFT = ({ nftAddress, price, cid }: Props) => {
     const [error, setError] = useState<string | null>(null);
 
 
-    const paymentToken = contracts.GHToken
+    const paymentToken = contracts.GHToken    
     const carbonToken = new Contract(nftAddress, CarbonProjectNFT.abi, mainSigner)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,11 +31,20 @@ const BuyNFT = ({ nftAddress, price, cid }: Props) => {
     const buy = async () => {
         console.log('buying');
         console.log("Raw price string:", price);
+
         if (!mainSigner || !account || !paymentToken || !carbonToken) {
             return setError("🔒 Connect your wallet to continue");
         }
 
         try {
+            console.log("🧠 Account value:", account);
+            console.log("🧠 Signer address:", await mainSigner.getAddress());
+
+            const isValidChain = await validateTokenConnection(paymentToken, mainSigner, account)
+            if (!isValidChain) {
+                return setError("⚠️ Change network to Hedera Testnet to continue");
+
+            }
             const receipt = await buyBatchFunction({ carbonToken, paymentToken, account, price, cid, quantity, nftAddress });
             console.log("✅ Buy successful:", receipt);
         } catch (err: any) {
@@ -57,7 +67,7 @@ const BuyNFT = ({ nftAddress, price, cid }: Props) => {
                 BuyNft
             </button>
             <input type="number" value={quantity} onChange={handleChange}
-            className="border border-green-600 rounded w-16 text-green-600 text-center py-2 h-10" />
+                className="border border-green-600 rounded w-16 text-green-600 text-center py-2 h-10" />
             {error && <p>{error}</p>}
 
         </div>

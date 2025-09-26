@@ -17,7 +17,7 @@ const ProjectCard = ({project}:Props) => {
         <div className="space-y-3">
           <div>
             <h3 className="text-xl font-semibold text-green-700 mb-2">{project.name}</h3>
-            <div className="flex items-center text-green-600">
+            <div className="flex items-center text-green-600 mt-5">
               <MapPin className="w-4 h-4 mr-2" />
               <h4 className="text-sm">Standard: {project.registry}</h4>
             </div>
@@ -30,10 +30,10 @@ const ProjectCard = ({project}:Props) => {
         <div className="space-y-3">
           {project.methodologies?.map((methodology: any, index: number) => (
             <div key={index} className="flex items-center space-x-3">
-              <div className={`px-3 py-1 rounded-full text-xs font-medium `}>
+              <div className={`px-3 py-1 rounded-full text-xs font-medium text-gray-700`}>
                 {methodology.category}
               </div>
-              <span className="text-sm text-green-700 font-medium">{methodology.name}</span>
+              <span className="text-sm text-green-700 font-medium font-bold">{methodology.name}</span>
             </div>
           ))}
         </div>
@@ -41,7 +41,7 @@ const ProjectCard = ({project}:Props) => {
         {/* Price */}
         <div className="flex items-center space-x-2 p-3 bg-green-50 rounded-lg">
           <DollarSign className="w-5 h-5 text-green-600" />
-          <span className="text-green-700 font-medium">
+          <span className="text-green-700 font-l font-bold">
             {project.price === "0" ? "Price not available" : `$${project.price} per credit`}
           </span>
         </div>
@@ -66,37 +66,26 @@ const ProjectCard = ({project}:Props) => {
         </div>
 
         {/* Links */}
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 justify-evenly">
           <a
-            href={project.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-green-600 hover:text-green-700 underline text-sm font-medium"
-          >
-            Visit Site
-          </a>
-          <Link
-            href={`/project/${project._id}`}
-            className="text-green-600 hover:text-green-700 underline text-sm font-medium"
-          >
-            View Details
-          </Link>
+  href={project.url}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-block px-4 py-2 rounded-full bg-green-100 text-green-700 hover:bg-yellow-200 transition font-medium text-sm shadow-sm"
+>
+  Visit Site
+</a>
+
+<Link
+  href={`/project/${project._id}`}
+  className="inline-block px-4 py-2 rounded-full bg-green-100 text-green-700 hover:bg-yellow-200 transition font-medium text-sm shadow-sm"
+>
+  View Details
+</Link>
+
         </div>
 
-        {/* SDGs */}
-        {project.sustainableDevelopmentGoals?.length > 0 && (
-          <div className="space-y-2">
-            <span className="text-sm font-medium text-green-700">SDG:</span>
-            <div className="flex flex-wrap gap-2">
-              {project.sustainableDevelopmentGoals.map((sdg: string) => (
-                <div key={sdg} className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-medium">
-                  {sdg}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
+    
         <ProjectActions project={project}  />
       </div>
     </div>
