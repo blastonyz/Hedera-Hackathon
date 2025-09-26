@@ -59,6 +59,7 @@ export type ProjectsContextType = {
   filterByOwners: () => Project[] | null;
   totalProjects: number;
   getProjects: (page?: number, limit?: number) => Promise<void>;
+  loading:boolean;
   page:number;
   pages:number;
   hasNextPage:boolean;

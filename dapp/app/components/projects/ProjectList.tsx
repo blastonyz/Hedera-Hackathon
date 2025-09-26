@@ -3,10 +3,11 @@ import React, { forwardRef } from "react"
 import GetTokensERC20 from "../get-tokens/GetTokensERC20";
 import { useProjects } from "@/app/context/ProjectsProvider";
 import ProjectCard from "./card/ProjectCard";
+import Loader from "../loader/Loader";
 
 
 const ProjectList = forwardRef<HTMLDivElement, {}>((_, ref) => {
-    const { projects, totalProjects, getProjects, page, pages, hasNextPage, hasPrevPage } = useProjects()
+    const { projects, totalProjects, getProjects, loading, page, pages, hasNextPage, hasPrevPage } = useProjects()
 
     return (
         <section ref={ref} className="py-16 px-4 max-w-7xl mx-auto">
@@ -31,11 +32,20 @@ const ProjectList = forwardRef<HTMLDivElement, {}>((_, ref) => {
 
 
             {/* Projects Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {projects.map((project) => (
-                    <ProjectCard key={project.key} project={project} />
-                ))}
+            <div className="min-h-[200px] flex justify-center items-center">
+                {loading ? (
+                    <div className="flex flex-column text-green-600 animate-pulse text-lg font-medium">
+                        <Loader/>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+                        {projects.map((project) => (
+                            <ProjectCard key={project.key} project={project} />
+                        ))}
+                    </div>
+                )}
             </div>
+
             <div className="flex justify-center gap-4 mt-12">
                 <button
                     disabled={!hasPrevPage}

@@ -17,6 +17,7 @@ export const ProjectsProvider = ({ children }: { children: React.ReactNode }) =>
     });
     const [totalProjects, setTotalProjects] = useState<number>(0);
     const [projects, setProjects] = useState<Project[]>([]);
+      const [loading,setLoading] = useState(true)
 
     const getProjects = async (page = 1, limit = 6) => {
         try {
@@ -30,6 +31,8 @@ export const ProjectsProvider = ({ children }: { children: React.ReactNode }) =>
             setTotalProjects(result.total);
         } catch (error) {
             console.error('Error fetching projects:', error);
+        }finally{
+            setLoading(false)
         }
     };
 
@@ -65,6 +68,7 @@ export const ProjectsProvider = ({ children }: { children: React.ReactNode }) =>
                 filterByOwners,
                 totalProjects,
                 getProjects,
+                loading,
                 page: res.page,
                 pages: res.pages,
                 hasNextPage: res.hasNextPage,
