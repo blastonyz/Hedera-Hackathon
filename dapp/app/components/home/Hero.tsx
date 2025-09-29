@@ -12,52 +12,59 @@ type HeroProps = {
 
 const Hero = ({ scrollToRef }: HeroProps) => {
 
-const handleScroll = () => {
-  const target = scrollToRef.current;
-  if (!target){
-    return
-  }
+    const handleScroll = () => {
+        const target = scrollToRef.current;
+        if (!target) {
+            return
+        }
 
-  const targetTop = target.getBoundingClientRect().top + window.scrollY;
+        const targetTop = target.getBoundingClientRect().top + window.scrollY;
 
-  window.scrollTo({ top: targetTop, behavior: 'smooth' });
+        window.scrollTo({ top: targetTop, behavior: 'smooth' });
 
-};
-
-
+    };
 
     const titleRef = useRef(null)
     const subtitleRef = useRef(null)
     const buttonRef = useRef(null)
-    const card1Ref = useRef(null)
+    const card1Ref = useRef<HTMLDivElement | null>(null)
+    const card2Ref = useRef<HTMLDivElement | null>(null)
+
+useEffect(() => {
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+  tl.from(titleRef.current, { y: -50, opacity: 0, duration: 1 })
+    .from(subtitleRef.current, { y: 20, opacity: 0, duration: 0.8 }, '-=0.6')
+    .from(buttonRef.current, { scale: 0.8, opacity: 0, duration: 0.6 }, '-=0.4')
+
+  const cards: (HTMLDivElement)[] = []
+  if (card1Ref.current) cards.push(card1Ref.current)
+  if (card2Ref.current) cards.push(card2Ref.current)
+
+  cards.forEach((card) => {
+    gsap.from(card, {
+      scrollTrigger: {
+        trigger: card,
+        start: 'top 80%',
+      },
+      y: 50,
+      opacity: 0,
+      duration: 1,
+    })
+  })
+}, [])
 
 
-
-    useEffect(() => {
-        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
-        tl.from(titleRef.current, { y: -50, opacity: 0, duration: 1 })
-            .from(subtitleRef.current, { y: 20, opacity: 0, duration: 0.8 }, '-=0.6')
-            .from(buttonRef.current, { scale: 0.8, opacity: 0, duration: 0.6 }, '-=0.4')
-
-        gsap.from([card1Ref.current], {
-            scrollTrigger: {
-                trigger: card1Ref.current,
-                start: 'top 80%',
-            },
-            y: 50,
-            opacity: 0,
-            duration: 1,
-            stagger: 0.3,
-        })
-    }, [])
 
     return (
         <section className="relative min-h-screen bg-[url('/home-lq.jpg')] bg-cover bg-center text-white flex flex-col items-center justify-center px-4 py-20">
             <div className="text-center max-w-3xl">
                 <h2
                     ref={titleRef}
-                    className="font-outline text-6xl md:text-8xl font-bold"
-                    style={{ textShadow: '0 4px 8px #9BE10D', fontFamily: 'GoldenVarsityRegular, sans-serif' }}
+                    className="font-outline text-6xl md:text-8xl"
+                    style={{
+                        textShadow: '0 4px 8px #050505, 0 12px 18px #9BE10D',
+                        fontFamily: 'GoldenVarsityScript, sans-serif'
+                    }}
                 >
                     GreenHouse
                 </h2>
@@ -66,7 +73,7 @@ const handleScroll = () => {
                     ref={subtitleRef}
                     className="mt-4 text-lg"
                     style={{ textShadow: '0 2px 4px rgba(0, 0, 0, 0.97)' }}            >
-                    Simulation of Tokenization of Verified Projects
+                    Simulation of Tokenization of Verified Carbon Projects
                 </h1>
             </div>
 
@@ -83,7 +90,7 @@ const handleScroll = () => {
                 </div>
 
                 <div
-                    ref={card1Ref}
+                    ref={card2Ref}
                     className="bg-white/10 backdrop-blur-md border border-green-600 rounded-xl shadow-lg p-6 hover:animate-glow transition-transform"
                 >
                     <p className="text-lg">

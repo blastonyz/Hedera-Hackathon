@@ -6,14 +6,9 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+   --font-varsity: 'GoldenVarsityScript', cursive;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -21,6 +16,14 @@
     --foreground: #ededed;
   }
 }
+
+@font-face {
+  font-family: 'GoldenVarsityScript';
+  src: url('/golden_varsity_script/GoldenVarsityScript.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 
 body {
   background: var(--background);
