@@ -22,7 +22,7 @@ const ProjectActions = ({ project }: ProjectActionsProps) => {
   const isOwner = project.owner?.toLowerCase() === account.toLowerCase();
 
   return (
-    <div className="pt-4 border-t border-green-100 space-y-3">
+    <div className="pt-4 border-t border-[#9BE10D] space-y-3">
       {project.owner && (
         <p className="text-xs text-green-500">Owned by: {project.owner}</p>
       )}

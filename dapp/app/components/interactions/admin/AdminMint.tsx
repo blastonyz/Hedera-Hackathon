@@ -3,6 +3,7 @@ import { Contract } from "ethers";
 import { useWallet } from "@/app/context/ConnectionProvider";
 import { useState } from "react";
 import CarbonProjectNFT from "@contracts/CarbonProjectNFT.sol/CarbonProjectNFT.json"
+import Button from "../../ui/Button";
 
 type AdminMintProps = {
     nftAddress: string;
@@ -41,7 +42,7 @@ const AdminMint = ({ nftAddress, cid }: AdminMintProps) => {
 
     return (
         <div className="flex flex-row  justify-between space-y-2">
-            <button
+         { /*  <button
                 onClick={mint}
                 disabled={!account}
                 className={`h-10 px-4 rounded font-semibold w-35 transition ${!account
@@ -50,9 +51,15 @@ const AdminMint = ({ nftAddress, cid }: AdminMintProps) => {
                     }`}
             >
                 Mint
-            </button>
+            </button>*/}
+
+            <Button
+            onClick={mint}
+            text={'Mint'}
+            account={account}
+            />
             <input type="number" value={quantity} onChange={handleChange} 
-            className="border border-green-600 rounded w-16 text-green-600 text-center py-2 h-10"/>
+            className="border border-[#9BE10D] rounded w-16 text-[#9BE10D] text-center py-2 h-10"/>
             {error && <p className="text-red-500 mt-2">{error}</p>}
         </div>);
 }

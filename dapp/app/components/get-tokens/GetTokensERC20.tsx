@@ -1,6 +1,8 @@
 'use client'
 import { useWallet } from "@/app/context/ConnectionProvider"
 import { addrGHToken } from "@/contracts/adresses"
+import Button from "../ui/Button"
+import { on } from "events"
 
 const GetTokensERC20 = () => {
     const { account } = useWallet()
@@ -43,13 +45,21 @@ const GetTokensERC20 = () => {
 
 
     return (
-        <button
+        <>
+        {    /*<button
             onClick={mintTokens}
             className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-200"
         >
             Get 25,000 GHT Tokens
-        </button>
+        </button>*/}
 
+        <Button
+        onClick={mintTokens}  
+        text={'Get 25k GHC Tokens'}
+        account={account}  
+        />
+        </>
+    
     );
 }
 

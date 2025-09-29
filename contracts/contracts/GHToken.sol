@@ -3,8 +3,7 @@ pragma solidity ^0.8.28;
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 
-
-contract GHToken is ERC20, AccessControl{
+contract GHToken is ERC20, AccessControl {
     bytes32 private MINTER_ROLE = keccak256("MINTER_ROLE");
 
     bool private initialized;
@@ -12,20 +11,24 @@ contract GHToken is ERC20, AccessControl{
 
     event TokenMinted(address indexed to, uint256 amount, string context);
 
-    constructor() ERC20("GH COIN","GHC"){
+    constructor() ERC20("GH COIN", "GHC") {
         admin = msg.sender;
         require(admin != address(0), "admin=0");
         initialized = true;
-        _grantRole(DEFAULT_ADMIN_ROLE,admin);
+        _grantRole(DEFAULT_ADMIN_ROLE, admin);
         _grantRole(MINTER_ROLE, admin);
     }
 
-    function mint(address to, uint256 amount) external onlyRole(MINTER_ROLE){
+    function mint(address to, uint256 amount) external onlyRole(MINTER_ROLE) {
         _mint(to, amount);
-        emit TokenMinted(to,amount,"token granteds");
+        emit TokenMinted(to, amount, "token granteds");
     }
 
     function burn(uint256 amount) external {
-        _burn(msg.sender,amount);
+        _burn(msg.sender, amount);
+    }
+
+    function balanceOf(address account) public view override returns (uint256) {
+        return super.balanceOf(account);
     }
 }

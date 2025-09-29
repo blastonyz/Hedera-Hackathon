@@ -12,14 +12,26 @@ type HeroProps = {
 
 const Hero = ({ scrollToRef }: HeroProps) => {
 
-    const handleScroll = () => {
-        scrollToRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }
+const handleScroll = () => {
+  const target = scrollToRef.current;
+  if (!target){
+    return
+  }
+
+  const targetTop = target.getBoundingClientRect().top + window.scrollY;
+
+  window.scrollTo({ top: targetTop, behavior: 'smooth' });
+
+};
+
+
 
     const titleRef = useRef(null)
     const subtitleRef = useRef(null)
     const buttonRef = useRef(null)
     const card1Ref = useRef(null)
+
+
 
     useEffect(() => {
         const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
@@ -45,7 +57,7 @@ const Hero = ({ scrollToRef }: HeroProps) => {
                 <h2
                     ref={titleRef}
                     className="font-outline text-6xl md:text-8xl font-bold"
-                    style={{ textShadow: '0 2px 6px rgba(34,197,94,0.8)',fontFamily: 'GoldenVarsityRegular, sans-serif' }} 
+                    style={{ textShadow: '0 4px 8px #9BE10D', fontFamily: 'GoldenVarsityRegular, sans-serif' }}
                 >
                     GreenHouse
                 </h2>
@@ -53,7 +65,7 @@ const Hero = ({ scrollToRef }: HeroProps) => {
                 <h1
                     ref={subtitleRef}
                     className="mt-4 text-lg"
-                    style={{ textShadow: '0 2px 4px rgba(0, 0, 0, 0.97)'}}            >
+                    style={{ textShadow: '0 2px 4px rgba(0, 0, 0, 0.97)' }}            >
                     Simulation of Tokenization of Verified Projects
                 </h1>
             </div>

@@ -11,13 +11,13 @@ const ProjectCard = ({project}:Props) => {
 
 
      return (
- <div className="bg-white rounded-lg shadow-md border border-green-100 transition-transform overflow-hidden flex flex-col justify-between min-h-[600px] card-hover-glow">
+ <div className="bg-black/30 backdrop-blur-md rounded-lg shadow-md border border-[#92E01D] transition-transform overflow-hidden flex flex-col justify-between min-h-[600px] min-w-[330px] card-hover-glow">
 
-      <div className="p-6 border-b border-green-50">
+      <div className="p-6 border-b border-[#92E01D]">
         <div className="space-y-3">
           <div>
-            <h3 className="text-xl font-semibold text-green-700 mb-2">{project.name}</h3>
-            <div className="flex items-center text-green-600 mt-5">
+            <h3 className="text-xl font-semibold text-[#B6E000] mb-2">{project.name}</h3>
+            <div className="flex items-center text-white mt-5">
               <MapPin className="w-4 h-4 mr-2" />
               <h4 className="text-sm">Standard: {project.registry}</h4>
             </div>
@@ -30,38 +30,38 @@ const ProjectCard = ({project}:Props) => {
         <div className="space-y-3">
           {project.methodologies?.map((methodology: any, index: number) => (
             <div key={index} className="flex items-center space-x-3">
-              <div className={`px-3 py-1 rounded-full text-xs font-medium text-gray-700`}>
+              <div className={`px-3 py-1 rounded-full text-xs font-medium text-white`}>
                 {methodology.category}
               </div>
-              <span className="text-sm text-green-700 font-medium font-bold">{methodology.name}</span>
+              <span className="text-sm text-[#9BE10D] font-medium font-bold">{methodology.name}</span>
             </div>
           ))}
         </div>
 
         {/* Price */}
-        <div className="flex items-center space-x-2 p-3 bg-green-50 rounded-lg">
-          <DollarSign className="w-5 h-5 text-green-600" />
-          <span className="text-green-700 font-l font-bold">
+        <div className="flex items-center space-x-2 p-3 border border-[#9BE10D] rounded-lg">
+          <DollarSign className="w-5 h-5 text-[#9BE10D]" />
+          <span className="text-white font-l font-bold">
             {project.price === "0" ? "Price not available" : `$${project.price} per credit`}
           </span>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="p-3 bg-green-50 rounded-lg">
+          <div className="p-3 border border-[#9BE10D] rounded-lg">
             <div className="flex items-center space-x-2 mb-2">
-              <TrendingUp className="w-4 h-4 text-green-600" />
-              <span className="text-sm font-medium text-green-700">Supply</span>
+              <TrendingUp className="w-4 h-4 text-[#9BE10D]" />
+              <span className="text-sm font-medium text-[#9BE10D]">Supply</span>
             </div>
-            <p className="text-green-800 font-semibold">{project.stats?.totalSupply || "N/A"}</p>
+            <p className="text-whitefont-semibold">{project.stats?.totalSupply.toFixed(2) || "N/A"}</p>
           </div>
 
-          <div className="p-3 bg-green-50 rounded-lg">
+          <div className="p-3 border border-[#9BE10D] rounded-lg">
             <div className="flex items-center space-x-2 mb-2">
-              <Leaf className="w-4 h-4 text-green-600" />
-              <span className="text-sm font-medium text-green-700">Retired</span>
+              <Leaf className="w-4 h-4 text-[#9BE10D]" />
+              <span className="text-sm font-medium text-[#9BE10D]">Retired</span>
             </div>
-            <p className="text-green-800 font-semibold">{project.stats?.totalRetired || "N/A"}</p>
+            <p className="text-white font-semibold">{project.stats?.totalRetired.toFixed(2) || "N/A"}</p>
           </div>
         </div>
 
@@ -71,14 +71,14 @@ const ProjectCard = ({project}:Props) => {
   href={project.url}
   target="_blank"
   rel="noopener noreferrer"
-  className="inline-block px-4 py-2 rounded-full bg-green-100 text-green-700 hover:bg-yellow-200 transition font-medium text-sm shadow-sm"
+  className="inline-block px-4 py-2 rounded-full text-[#9BE10D] border border-[#9BE10D] hover:bg-white transition font-medium text-sm shadow-sm"
 >
   Visit Site
 </a>
 
 <Link
   href={`/project/${project._id}`}
-  className="inline-block px-4 py-2 rounded-full bg-green-100 text-green-700 hover:bg-yellow-200 transition font-medium text-sm shadow-sm"
+  className="inline-block px-4 py-2 rounded-full text-[#9BE10D] border border-[#9BE10D] hover:bg-white transition font-medium text-sm shadow-sm"
 >
   View Details
 </Link>

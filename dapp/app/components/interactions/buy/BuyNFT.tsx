@@ -5,6 +5,7 @@ import CarbonProjectNFT from "@contracts/CarbonProjectNFT.sol/CarbonProjectNFT.j
 import { useState } from "react";
 import { buyBatchFunction } from "./BuyFunctions";
 import { validateTokenConnection } from "@/utils/validateChain";
+import Button from "../../ui/Button";
 
 type Props = {
     nftAddress: string;
@@ -18,7 +19,7 @@ const BuyNFT = ({ nftAddress, price, cid }: Props) => {
     const [error, setError] = useState<string | null>(null);
 
 
-    const paymentToken = contracts.GHToken    
+    const paymentToken = contracts.GHToken
     const carbonToken = new Contract(nftAddress, CarbonProjectNFT.abi, mainSigner)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,8 +55,8 @@ const BuyNFT = ({ nftAddress, price, cid }: Props) => {
     }
 
     return (
-        <div className="flex flex-row  justify-between space-y-2">
-            <button
+        <div className="flex flex-row  justify-between gap-4">
+            {/* <button
                 onClick={buy}
                 disabled={!account}
                 className={`h-10 px-4 rounded font-semibold w-35 transition ${!account
@@ -65,9 +66,18 @@ const BuyNFT = ({ nftAddress, price, cid }: Props) => {
 
             >
                 BuyNft
-            </button>
+            </button>*/}
+
+            <Button
+                onClick={buy}
+                text={'BuyNft'}
+                account={account}
+            />
+
             <input type="number" value={quantity} onChange={handleChange}
-                className="border border-green-600 rounded w-16 text-green-600 text-center py-2 h-10" />
+                className="border border-[#9BE10D] rounded w-16 text-[#9BE10D] text-center px-4 py-2 text-sm leading-tight h-auto"
+
+            />
             {error && <p>{error}</p>}
 
         </div>

@@ -6,6 +6,7 @@ import { buildMetadata, buildDeployParamsFromProject, deployProject } from './De
 import { addrGHToken, addrCarbonRetire, addrCarbonFactory } from '@/contracts/adresses';
 import { Contract } from 'ethers';
 import CarbonFactory from '@contracts/CarbonFactory.sol/CarbonFactory.json'
+import Button from '../../ui/Button';
 
 type Props = {
     project: Project;
@@ -99,13 +100,13 @@ const DeployERC721 = ({ project }: Props) => {
     };
 
     return (
-        <div className=" flex p-4 border border-gray-300 rounded-lg bg-white items-center justify-center">
+        <div className=" flex p-4 border border-[#9BE10D] rounded-lg items-center justify-center">
             <button
                 onClick={handleDeploy}
                 disabled={loading || !mainProvider}
                 className={`px-4 py-2 rounded font-semibold transition ${loading || !mainProvider
                     ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                    : 'bg-green-600 text-white hover:bg-green-700'
+                    : 'bg-[#9BE10D] text-white hover:brightness-110 active:scale-95'
                     }`}
             >
                 {loading ? "Deploying..." : "Tokenize"}

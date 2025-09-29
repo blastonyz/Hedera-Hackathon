@@ -3,6 +3,7 @@ import { Contract } from "ethers"
 import { useWallet } from "@/app/context/ConnectionProvider"
 import CarbonProjectNFT from '@contracts/CarbonProjectNFT.sol/CarbonProjectNFT.json'
 import { useState } from "react"
+import Button from "../../ui/Button"
 
 type Props = {
   tokenAddress: string;
@@ -28,7 +29,7 @@ const RetireCredits = ({ tokenAddress }: Props) => {
         }
     }
 
-  const getRole = async () => {
+  const retire = async () => {
     const roleResponse = await fetch("/api/retire", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -52,9 +53,9 @@ const RetireCredits = ({ tokenAddress }: Props) => {
   }
 
   return (
-    <div className="flex flex-row justify-between space-y-2">
-         <button
-      onClick={getRole}
+    <div className="flex flex-row justify-between gap-4">
+    {    /* <button
+      onClick={retire}
       className={`h-10 px-4 rounded font-semibold w-35 transition ${!account
         ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
         : 'bg-green-600 text-white hover:bg-green-700'
@@ -62,9 +63,15 @@ const RetireCredits = ({ tokenAddress }: Props) => {
 
     >
       Retire Credits
-    </button>
+    </button>*/}
+
+    <Button
+    onClick={retire}
+    text={'Retire Credits'}
+    account={account}
+    />
       <input type="number" value={tokenId} onChange={handleChange} 
-      className="border border-green-600 rounded w-16 text-green-600 text-center h-10"/>
+      className="border border-[#9BE10D] rounded w-16 text-[#9BE10D] text-center py-2 h-auto" />
     {error && <p className="text-red-500 mt-2">{error}</p>} 
     </div>
  

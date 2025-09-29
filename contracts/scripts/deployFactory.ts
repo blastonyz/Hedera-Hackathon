@@ -13,14 +13,14 @@ async function main() {
 
   const factory = await factoryContract.deploy(
     '0x6b801c046dae517ac0f3e43b66573152288a0ff0',//deployer admin address
-    '0x104617BC80EAC570E2a718BcdAB9c32A13c13b53',//retire impl
-    '0xd25546Cd8743C13A3181E981Bb0895c0290907Eb',//carbon project impl
-    '0x104617BC80EAC570E2a718BcdAB9c32A13c13b53' //erc20 address
+    '0xA82320EBA1C8fAab8EbA7680B4cDf07Cb8209b34',//retire impl
+    '0x34F2662f8227Eff7225015388b273EE7b6DeA3A7',//carbon project impl
+    '0xF7B4A3e64e6bdc698d4f04AaE9D6fa5Bf881F89c' //erc20 address
   );
   await factory.waitForDeployment();
 
   const address = await factory.getAddress();
-  console.log("✅ Token deployed at:", address);
+  console.log("✅ Factory deployed at:", address);
 }
 
 main().catch((error) => {
