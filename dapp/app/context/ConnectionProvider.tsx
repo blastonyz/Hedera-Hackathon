@@ -80,9 +80,10 @@ export const ConnectionProvider = ({ children }: Props) => {
                             params: [{ chainId: "0x128" }], // 296 en hexadecimal
                         });
                         console.log("🔄 Switched to Hedera Testnet");
+
                     } catch (err: any) {
                         console.error("❌ Failed to switch network:", err);
-                        throw new Error("User rejected network switch or Hedera Testnet is not added");
+
                     }
 
                 }
@@ -102,16 +103,30 @@ export const ConnectionProvider = ({ children }: Props) => {
                 console.log('browser: ', provider);
 
                 setMainProvider(provider);
-                const signer = await provider.getSigner();
+                let signer;
+                try {
+                    signer = await provider.getSigner();
+                } catch (err) {
+                    console.warn("⚠️ user reject connection:", err);
+                    return;
+                }
+
+
                 const address = await signer.getAddress();
                 setAccount(address);
                 console.log("Connected account:", address);
                 localStorage.setItem('walletAddress', address);
             }
 
-        } catch (error) {
-            console.error("Error connecting wallet:", error);
+        } catch (error: any) {
+            if (error.code === 4001) {
+                console.warn("⚠️ Usuario rechazó la conexión de la wallet.");
+                // Podés mostrar un toast, modal, o ignorar silenciosamente
+            } else {
+                console.error("❌ Error inesperado al conectar la wallet:", error);
+            }
         }
+
     }
 
     return (
