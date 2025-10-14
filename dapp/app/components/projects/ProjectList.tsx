@@ -13,12 +13,12 @@ const ProjectList = forwardRef<HTMLDivElement, {}>(function ProjectList(_, ref) 
     return (
         <section
             ref={ref}
-            className="relative bg-black bg-[url('/bg-byw.jpg')] bg-cover bg-center bg-no-repeat bg-fixed py-16 px-4 mx-auto w-full"
+            className="relative py-16 px-4 mx-auto w-full"
         >
             <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                    backgroundColor: 'rgba(35, 65, 14, 0.4)',
                     zIndex: -1,
                 }}
             />

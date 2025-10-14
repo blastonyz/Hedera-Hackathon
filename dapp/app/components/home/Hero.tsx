@@ -56,7 +56,14 @@ useEffect(() => {
 
 
     return (
-        <section className="relative min-h-screen bg-[url('/home-lq.jpg')] bg-cover bg-center text-white flex flex-col items-center justify-center px-4 py-20">
+        <section className="relative min-h-screen text-white flex flex-col items-center justify-center px-4 py-20">
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                    backgroundColor: 'rgba(5, 68, 2, 0.4)',
+                    zIndex: -1,
+                }}
+            />
             <div className="text-center max-w-3xl">
                 <h2
                     ref={titleRef}
