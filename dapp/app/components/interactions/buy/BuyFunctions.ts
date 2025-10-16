@@ -18,8 +18,11 @@ export const buyBatchFunction = async ({
   nftAddress: string;
 }) => {
   const amount = BigInt(parseFloat(price) * quantity * 10 ** 18);
+  /*
   const balance = await paymentToken.balanceOf(account);
-  if (balance < amount) throw new Error("❌ Insufficient balance");
+  if (balance < amount) {
+    throw new Error("❌ Insufficient balance");
+  }*/
 
   const allowance = await paymentToken.allowance(account, nftAddress);
   if (allowance < amount) {
@@ -27,7 +30,7 @@ export const buyBatchFunction = async ({
     await tx.wait();
   }
 
-  await carbonToken.buy.staticCall(cid, quantity);
+  //await carbonToken.buy.staticCall(cid, quantity);
   const tx = await carbonToken.buy(cid, quantity);
   return await tx.wait();
 };

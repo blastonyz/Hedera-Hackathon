@@ -1,18 +1,31 @@
 'use client'
 import { useWallet } from "@/app/context/ConnectionProvider"
+import { useState } from "react"
 import { addrGHToken } from "@/contracts/adresses"
+import ToastMessage from "../ui/ToastMessage"
 import Button from "../ui/Button"
-import { on } from "events"
+
 
 const GetTokensERC20 = () => {
-    const { account } = useWallet()
-    const amount = BigInt(25000 * 10 ** 18); // 25,000 tokens with 18 decimals
+    const { account, mainSigner } = useWallet()
+    const amount = BigInt(25000 * 10 ** 18);
+    const [loading, setLoading] = useState(false)
+    const [toast, setToast] = useState<{ message: string; type: "success" | "error" | "info" | "warning" } | null>(null)
+
+    const showToast = (message: string, type: "success" | "error" | "info" | "warning" = "info") => {
+        setToast({ message, type })
+        setTimeout(() => setToast(null), 4000)
+    }
+
+
+
 
     if (!account) {
         return <div className="alert">🔒 Connect your wallet to continue</div>;
     }
 
     const mintTokens = async () => {
+        setLoading(true)
         const res = await fetch("/api/tokens", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -22,7 +35,30 @@ const GetTokensERC20 = () => {
         console.log("Mint result:", data);
         if (res.ok) {
             await addTokenToMetaMask();
+        } try {
+            const res = await fetch("/api/tokens", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ to: account, amount: amount.toString() }),
+            })
+
+            const data = await res.json()
+            console.log("Mint result:", data)
+
+            if (!res.ok) {
+                throw new Error(data?.error || "Minting failed")
+            }
+
+            await addTokenToMetaMask()
+            showToast("✅ 25k GHC tokens minted and added to MetaMask", "success")
+
+        } catch (err: any) {
+            console.error("❌ Mint error:", err)
+            
+        } finally {
+            setLoading(false)
         }
+
     };
 
     const addTokenToMetaMask = async () => {
@@ -38,6 +74,7 @@ const GetTokensERC20 = () => {
                     },
                 },
             });
+            
         } catch (error) {
             console.error("Error adding token:", error);
         }
@@ -45,21 +82,18 @@ const GetTokensERC20 = () => {
 
 
     return (
-        <>
-        {    /*<button
-            onClick={mintTokens}
-            className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-200"
-        >
-            Get 25,000 GHT Tokens
-        </button>*/}
 
-        <Button
-        onClick={mintTokens}  
-        text={'Get 25k GHC Tokens'}
-        account={account}  
-        />
+         <>
+            <Button
+                onClick={mintTokens}
+                text={'Get 25k GHC Tokens'}
+                account={account}
+                loading={loading}
+                mainSigner={mainSigner}
+            />
+            {toast && <ToastMessage message={toast.message} type={toast.type} />}
         </>
-    
+
     );
 }
 

@@ -105,7 +105,7 @@ const DeployERC721 = ({ project }: Props) => {
                 onClick={handleDeploy}
                 disabled={loading || !mainProvider}
                 className={`px-4 py-2 rounded font-semibold transition ${loading || !mainProvider
-                    ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                    ? 'bg-violet-400 text-white cursor-not-allowed'
                     : 'bg-[#9BE10D] text-white hover:brightness-110 active:scale-95'
                     }`}
             >

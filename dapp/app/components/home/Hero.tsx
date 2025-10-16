@@ -60,8 +60,9 @@ useEffect(() => {
               <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
-                    backgroundColor: 'rgba(5, 68, 2, 0.4)',
+                    backgroundColor: 'rgba(48, 2, 68, 0.3)',
                     zIndex: -1,
+                    backdropFilter: 'blur(2px)'
                 }}
             />
             <div className="text-center max-w-3xl">
@@ -78,7 +79,7 @@ useEffect(() => {
 
                 <h1
                     ref={subtitleRef}
-                    className="mt-4 text-lg"
+                    className="mt-10 text-lg"
                     style={{ textShadow: '0 2px 4px rgba(0, 0, 0, 0.97)' }}            >
                     Simulation of Tokenization of Verified Carbon Projects
                 </h1>
@@ -88,7 +89,7 @@ useEffect(() => {
             <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl w-full">
                 <div
                     ref={card1Ref}
-                    className="bg-white/10 backdrop-blur-md border border-green-600 rounded-xl shadow-lg p-6 hover:animate-glow transition-transform"
+                    className="bg-white/10 backdrop-blur-md border border-lime-500 rounded-xl shadow-lg p-6 hover:animate-glow transition-transform"
                 >
                     <p className="text-lg">
                         Claim GH Coins and purchase tokenized project credits to mitigate the impact of your carbon footprint.
@@ -98,7 +99,7 @@ useEffect(() => {
 
                 <div
                     ref={card2Ref}
-                    className="bg-white/10 backdrop-blur-md border border-green-600 rounded-xl shadow-lg p-6 hover:animate-glow transition-transform"
+                    className="bg-white/10 backdrop-blur-md border border-lime-500 rounded-xl shadow-lg p-6 hover:animate-glow transition-transform"
                 >
                     <p className="text-lg">
                         Claim projects, tokenize them in 1 click, and sell their available credits.You will assume the role of a project capable of issuing carbon credits, verified by different standards.
@@ -112,7 +113,7 @@ useEffect(() => {
                 <div className="w-full max-w-xs">
                     <button
                         onClick={handleScroll}
-                        className="w-full h-10 px-4 rounded font-semibold transition bg-green-600 text-white hover:bg-green-400"
+                        className="w-full h-10 px-4 rounded font-semibold transition bg-lime-500 text-white hover:bg-green-400"
                     >
                         Explore
                     </button>

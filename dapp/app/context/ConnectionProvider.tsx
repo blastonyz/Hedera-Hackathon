@@ -24,6 +24,7 @@ type WalletContextType = {
     connectWallet: () => Promise<void>;
     mainProvider: BrowserProvider | null;
     mainSigner: JsonRpcSigner | null;
+    disconnectWallet: () => void
 };
 
 
@@ -129,6 +130,11 @@ export const ConnectionProvider = ({ children }: Props) => {
 
     }
 
+    const disconnectWallet = () => {
+        setAccount(null)
+        localStorage.removeItem("walletAddress");
+    }
+
     return (
         <WalletContext.Provider
             value={{
@@ -136,7 +142,8 @@ export const ConnectionProvider = ({ children }: Props) => {
                 contracts,
                 connectWallet,
                 mainProvider,
-                mainSigner
+                mainSigner,
+                disconnectWallet
             }}>
             {children}
         </WalletContext.Provider>

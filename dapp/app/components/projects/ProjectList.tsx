@@ -13,29 +13,28 @@ const ProjectList = forwardRef<HTMLDivElement, {}>(function ProjectList(_, ref) 
     return (
         <section
             ref={ref}
-            className="relative py-16 px-4 mx-auto w-full"
+            className="relative px-4 mx-auto w-full pb-10"
         >
             <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
-                    backgroundColor: 'rgba(35, 65, 14, 0.4)',
+                    backgroundColor: 'rgba(48, 2, 68, 0.3)',
                     zIndex: -1,
+                    backdropFilter: 'blur(2px)'
                 }}
             />
 
-
-            {/* Header */}
-            <div className="relative text-center mb-12 z-10">
+            <div className="relative text-center z-10">
                 <div className="flex items-center justify-center mb-4">
-                    <div className="h-px bg-[#92E01D] flex-1 max-w-16"></div>
-                    <h2 className="text-3xl md:text-4xl font-bold text-[#92E01D] mx-6">Carbon Credit Projects</h2>
-                    <div className="h-px bg-[#92E01D] flex-1 max-w-16"></div>
+                    <div className="h-px bg-white flex-1 max-w-16"></div>
+                    <h2 className="text-3xl md:text-4xl font-bold block text-white mx-6">Carbon Credit Projects</h2>
+                    <div className="h-px bg-white flex-1 max-w-16"></div>
                 </div>
                 <p className="text-lg text-[#92E01D] mb-6 max-w-2xl mx-auto z-10">
                     Discover verified carbon offset projects making a real impact on climate change
                 </p>
-                <div className="inline-flex items-center px-4 py-2 rounded-full border border-[#92E01D]">
-                    <span className="text-sm font-medium text-[#92E01D]">
+                <div className="inline-flex items-center px-4 py-2 rounded-full border border-white">
+                    <span className="text-sm font-medium text-white">
                         {totalProjects} {projects.length === 1 ? "project" : "projects"} available
                     </span>
                 </div>
@@ -45,7 +44,6 @@ const ProjectList = forwardRef<HTMLDivElement, {}>(function ProjectList(_, ref) 
             </div>
 
 
-            {/* Projects Grid */}
             <div className="min-h-[200px] flex justify-center items-center">
                 {loading ? (
                     <div className="flex flex-column text-[#9BE10D] animate-pulse text-lg font-medium">

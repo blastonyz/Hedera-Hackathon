@@ -41,7 +41,7 @@ function ShaderPlane() {
 
             vec4 o = vec4(0.0);
 
-            for (; i++ < 128.;) {
+            for (; i++ < 32.;) {
                 p = vec3(u*d, d+t);
                 e = orb(p)-.1;
                 p.xy *= mat2(cos(.1*t + p.z/8. + vec4(0,33,11,0)));

@@ -28,12 +28,12 @@ export async function validateTokenConnection(
     }
 
     if (!contract.interface.getFunction("balanceOf")) {
-  throw new Error("Contract does not expose balanceOf");
+  console.error("Contract does not expose balanceOf");
 }
 
     const balance = await contract.balanceOf(account);
     console.log(`🧮 Token balance for ${account}:`, balance.toString());
-
+    
     return true;
   } catch (err) {
     console.error("❌ Token connection validation failed:", err);
