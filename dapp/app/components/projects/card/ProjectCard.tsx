@@ -11,7 +11,7 @@ const ProjectCard = ({project}:Props) => {
 
 
      return (
- <div className="bg-gray-300/10 backdrop-blur-md rounded-lg shadow-md border border-lime-500 transition-transform overflow-hidden flex flex-col justify-between min-h-[600px] min-w-[330px] card-hover-glow">
+ <div className="bg-gray-300/7 backdrop-blur-md rounded-lg shadow-md border border-lime-500 transition-transform overflow-hidden flex flex-col justify-between min-h-[600px] min-w-[330px] card-hover-glow">
 
       <div className="p-6">
         <div className="space-y-3">

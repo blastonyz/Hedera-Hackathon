@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 type Props = {
   message: string;
   type?: "success" | "error" | "info" | "warning";
-  duration?: number; // en ms
+  duration?: number; 
 };
 
 const colors = {

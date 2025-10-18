@@ -122,7 +122,6 @@ export const ConnectionProvider = ({ children }: Props) => {
         } catch (error: any) {
             if (error.code === 4001) {
                 console.warn("⚠️ Usuario rechazó la conexión de la wallet.");
-                // Podés mostrar un toast, modal, o ignorar silenciosamente
             } else {
                 console.error("❌ Error inesperado al conectar la wallet:", error);
             }

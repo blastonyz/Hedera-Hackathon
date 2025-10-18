@@ -2,7 +2,7 @@
 import Hero from '../home/Hero'
 import ProjectList from '../projects/ProjectList'
 import { useRef, useLayoutEffect } from 'react'
-
+import ProjectData from '../interactions/data/ProjectsData'
 const Main = () => {
 
   const projectsRef = useRef<HTMLDivElement>(null)
@@ -22,7 +22,7 @@ const Main = () => {
     <>
       <Hero scrollToRef={projectsRef} />
       <ProjectList ref={projectsRef} />
-
+      {<ProjectData/>}
     </>
   )
 }

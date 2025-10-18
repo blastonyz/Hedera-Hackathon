@@ -3,6 +3,7 @@ import { useWallet } from "@/app/context/ConnectionProvider"
 import { useState } from "react"
 import { addrGHToken } from "@/contracts/adresses"
 import ToastMessage from "../ui/ToastMessage"
+import Loader from "../loader/Loader"
 import Button from "../ui/Button"
 
 
@@ -17,25 +18,14 @@ const GetTokensERC20 = () => {
         setTimeout(() => setToast(null), 4000)
     }
 
-
-
-
     if (!account) {
         return <div className="alert">🔒 Connect your wallet to continue</div>;
     }
 
     const mintTokens = async () => {
         setLoading(true)
-        const res = await fetch("/api/tokens", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ to: account, amount: amount.toString() }),
-        });
-        const data = await res.json();
-        console.log("Mint result:", data);
-        if (res.ok) {
-            await addTokenToMetaMask();
-        } try {
+     
+         try {
             const res = await fetch("/api/tokens", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -46,15 +36,17 @@ const GetTokensERC20 = () => {
             console.log("Mint result:", data)
 
             if (!res.ok) {
-                throw new Error(data?.error || "Minting failed")
+                showToast("Mint Failed❗", "error")
+                setLoading(false)
             }
 
             await addTokenToMetaMask()
             showToast("✅ 25k GHC tokens minted and added to MetaMask", "success")
 
-        } catch (err: any) {
-            console.error("❌ Mint error:", err)
-            
+        } catch (error: any) {
+            showToast(`${error}`, "error")
+            setLoading(false)
+
         } finally {
             setLoading(false)
         }
@@ -74,24 +66,32 @@ const GetTokensERC20 = () => {
                     },
                 },
             });
-            
+
         } catch (error) {
-            console.error("Error adding token:", error);
+            showToast(`${error}`, "error")
+            setLoading(false)
         }
     };
 
 
     return (
 
-         <>
-            <Button
+        <>
+        {
+            !loading ?  
+             <Button
                 onClick={mintTokens}
                 text={'Get 25k GHC Tokens'}
                 account={account}
                 loading={loading}
                 mainSigner={mainSigner}
             />
+            :
+            <Loader/>
+        }
+          
             {toast && <ToastMessage message={toast.message} type={toast.type} />}
+        
         </>
 
     );

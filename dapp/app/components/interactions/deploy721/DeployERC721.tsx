@@ -7,12 +7,12 @@ import { addrGHToken, addrCarbonRetire, addrCarbonFactory } from '@/contracts/ad
 import { Contract } from 'ethers';
 import CarbonFactory from '@contracts/CarbonFactory.sol/CarbonFactory.json'
 import Button from '../../ui/Button';
+import FloatingPopupPortal from '../../ui/FloatingPopUpPortal';
 
 type Props = {
     project: Project;
 };
 
-//falta signer
 
 const DeployERC721 = ({ project }: Props) => {
     const { mainProvider, account, mainSigner } = useWallet()
@@ -24,6 +24,7 @@ const DeployERC721 = ({ project }: Props) => {
         txHash: string;
     }>(null);
     const [error, setError] = useState<string | null>(null);
+    const [toast, setToast] = useState<{ message: string; type: "success" | "error" | "info" | "warning" } | null>(null);
 
     const factoryContract = new Contract(addrCarbonFactory, CarbonFactory.abi, mainSigner)
 
@@ -31,6 +32,11 @@ const DeployERC721 = ({ project }: Props) => {
         setLoading(true);
         setError(null);
         setResult(null);
+
+        const showToast = (message: string, type: "success" | "error" | "info" | "warning" = "info") => {
+            setToast({ message, type });
+            setTimeout(() => setToast(null), 5000);
+        };
 
         if (!account) {
             setError("Wallet not connected");
@@ -60,12 +66,12 @@ const DeployERC721 = ({ project }: Props) => {
         const deployParams = buildDeployParamsFromProject(
             project,
             account,
-            // cid,
             addrGHToken,
             addrCarbonRetire,
             factoryContract
         );
-        console.log("Deploy params:", deployParams);
+
+
         try {
             const network = await mainProvider!.getNetwork();
             console.log("🌐 Active network:", network.name, "Chain ID:", network.chainId);
@@ -73,6 +79,7 @@ const DeployERC721 = ({ project }: Props) => {
             const res = await deployProject(deployParams);
             console.log("Deploy result:", res);
             setResult(res);
+            showToast("✅ Token deployed successfully", "success");
 
             if (res.txHash && res.address) {
                 console.log('contract address', res.address);
@@ -89,6 +96,7 @@ const DeployERC721 = ({ project }: Props) => {
                 });
                 const updateData = await updateRes.json();
                 console.log("Update project result:", updateData);
+
             }
 
 
@@ -101,30 +109,30 @@ const DeployERC721 = ({ project }: Props) => {
 
     return (
         <div className=" flex p-4 border border-[#9BE10D] rounded-lg items-center justify-center">
-            <button
+
+            <Button
                 onClick={handleDeploy}
-                disabled={loading || !mainProvider}
-                className={`px-4 py-2 rounded font-semibold transition ${loading || !mainProvider
-                    ? 'bg-violet-400 text-white cursor-not-allowed'
-                    : 'bg-[#9BE10D] text-white hover:brightness-110 active:scale-95'
-                    }`}
-            >
-                {loading ? "Deploying..." : "Tokenize"}
-            </button>
-
-            {error && (
-                <p className="mt-4 text-red-600 font-medium">❌ {error}</p>
-            )}
-
+                text='Tokenize'
+                account={account}
+                loading={loading}
+                mainSigner={mainSigner}
+            />
+            
             {result && (
-                <div className="mt-4 bg-gray-50 p-4 rounded shadow-sm text-sm text-gray-800">
-                    <p className="font-semibold text-green-700 mb-2">✅ Token deployed!</p>
-                    <p><span className="font-semibold">Address:</span> {result.address}</p>
-                    <p><span className="font-semibold">Project ID:</span> {result.projectId}</p>
-                    <p><span className="font-semibold">Owner:</span> {result.owner}</p>
-                    <p><span className="font-semibold">Tx Hash:</span> {result.txHash}</p>
-                </div>
+                <FloatingPopupPortal
+                    message="Token deployed!"
+                    details={{
+                        Address: result.address,
+                        ProjectID: String(result.projectId),
+                        Owner: result.owner,
+                        TxHash: result.txHash,
+                    }}
+
+                    onClose={() => setResult(null)}
+                />
             )}
+
+
         </div>
     );
 
