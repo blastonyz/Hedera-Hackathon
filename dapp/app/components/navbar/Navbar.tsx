@@ -17,8 +17,11 @@ const Navbar = () => {
         >
           Pitch
         </a>
-        <a href="" className="px-4 py-4 text-lime-500] italic">
+        <a href="" className="px-4 py-4 text-lime-500 italic">
           Certification
+        </a>
+        <a href="" className="px-4 py-4 text-lime-500 italic">
+          Demo
         </a>
       </div>
 
