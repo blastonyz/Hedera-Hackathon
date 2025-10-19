@@ -7,6 +7,7 @@ const ProjectData = () => {
     const [tokenCount, setTokenCount] = useState<number | null>(null)
     const [projectsCount, setProjectsCount] = useState<number | null>(null)
     const [userProjects, setUserProjects] = useState<number | null>(null)
+
     const retireContract = contracts.CarbonRetireNFT
     const factoryContract = contracts.CarbonFactory
 
@@ -15,7 +16,12 @@ const ProjectData = () => {
             console.warn("No wallet/account connected")
             return
         }
-        const totalMinted = await retireContract!.tokenId;
+        if (!retireContract || typeof retireContract.totalMinted !== 'function') {
+            console.warn('retireContract no está listo o no tiene totalMinted');
+            return;
+        }
+
+        const totalMinted = await retireContract!.totalMinted();
         console.log('minted: ', totalMinted)
         setTokenCount(Number(totalMinted))
 
