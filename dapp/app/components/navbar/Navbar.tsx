@@ -1,6 +1,7 @@
 'use client'
 import { useWallet } from "@/app/context/ConnectionProvider"
 import { LogOut } from "lucide-react";
+import Image from "next/image";
 
 
 const Navbar = () => {
@@ -9,7 +10,7 @@ const Navbar = () => {
   return (
     <nav className="flex flex-row justify-between px-4 py-2 bg-gray-300/7 backdrop-blur-md z-10 fixed w-full">
       <div className="flex flex-row">
-        <img src="logo.png" alt="greenhouse logo" width={135} height={50} className="ml-10" />
+        <Image src="logo.png" alt="greenhouse logo" width={135} height={50} className="ml-10" />
         <a href="https://drive.google.com/file/d/1HqkKTVukGxRcYJt5YJQoGHyDrRAwCQVXt_vx2shYMVE/view"
           target="_blank"
           className="px-4 py-4 text-lime-500 italic"

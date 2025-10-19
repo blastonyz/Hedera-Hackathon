@@ -13,6 +13,7 @@ type AdminMintProps = {
 const AdminMint = ({ nftAddress, cid }: AdminMintProps) => {
     const { mainSigner, account } = useWallet()
     const [quantity, setQuantity] = useState<number>(1);
+    const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
     const carbonToken = new Contract(nftAddress, CarbonProjectNFT.abi, mainSigner)
@@ -25,7 +26,7 @@ const AdminMint = ({ nftAddress, cid }: AdminMintProps) => {
     }
 
     const mint = async () => {
-        console.log('minting');
+        setLoading(true)
         if (!mainSigner || !account || !carbonToken) {
             return setError("🔒 Connect your wallet to continue");
         }
@@ -34,32 +35,40 @@ const AdminMint = ({ nftAddress, cid }: AdminMintProps) => {
             const tx = await carbonToken.adminMint(account, cid, quantity);
             const receipt = await tx.wait();
             console.log("✅ Mint successful:", receipt);
-        } catch (err: any) {
-            console.error(err);
-            setError(err.message || "Mint failed");
+
+        } catch (err: unknown) {
+
+            let errorMessage = "Mint failed";
+
+            if (
+                typeof err === "object" &&
+                err !== null &&
+                "message" in err &&
+                typeof (err as { message?: unknown }).message === 'string'
+            ) {
+                errorMessage = (err as { message: string }).message;
+            }
+
+            setError(errorMessage);
+            setLoading(false);
+
+        } finally {
+            setLoading(false)
         }
     }
 
     return (
         <div className="flex flex-row  justify-between space-y-2">
-         { /*  <button
-                onClick={mint}
-                disabled={!account}
-                className={`h-10 px-4 rounded font-semibold w-35 transition ${!account
-                    ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                    : 'bg-green-600 text-white hover:bg-green-700'
-                    }`}
-            >
-                Mint
-            </button>*/}
 
             <Button
-            onClick={mint}
-            text={'Mint'}
-            account={account}
+                onClick={mint}
+                text={'Mint'}
+                account={account}
+                loading={loading}
+                mainSigner={mainSigner}
             />
-            <input type="number" value={quantity} onChange={handleChange} 
-            className="border border-[#9BE10D] rounded w-16 text-[#9BE10D] text-center py-2 h-10"/>
+            <input type="number" value={quantity} onChange={handleChange}
+                className="border border-[#9BE10D] rounded w-16 text-[#9BE10D] text-center py-2 h-10" />
             {error && <p className="text-red-500 mt-2">{error}</p>}
         </div>);
 }

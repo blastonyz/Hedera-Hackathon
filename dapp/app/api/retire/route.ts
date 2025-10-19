@@ -1,13 +1,13 @@
-import {NextResponse} from 'next/server';
-import {JsonRpcProvider, Wallet, Contract} from 'ethers';
+import { NextResponse } from 'next/server';
+import { JsonRpcProvider, Wallet, Contract } from 'ethers';
 import { addrCarbonRetire } from '@/contracts/adresses';
 import CarbonRetireNFT from '@contracts/CarbonRetireNFT.sol/CarbonRetireNFT.json';
-import { keccak256, toUtf8Bytes} from 'ethers';
+import { keccak256, toUtf8Bytes } from 'ethers';
 
 export async function POST(request: Request) {
-  const { tokenAddress} = await request.json();
-  console.log('tokenAddress: ',tokenAddress);
-  
+  const { tokenAddress } = await request.json();
+  console.log('tokenAddress: ', tokenAddress);
+
   const provider = new JsonRpcProvider(process.env.HEDERA_RPC_URL);
   const wallet = new Wallet(process.env.HEDERA_PRIVATE_KEY || '', provider);
   const retireContract = new Contract(addrCarbonRetire, CarbonRetireNFT.abi, wallet);
@@ -16,12 +16,23 @@ export async function POST(request: Request) {
 
   try {
     const tx = await retireContract.grantRole(
-        role,
-        tokenAddress
+      role,
+      tokenAddress
     );
     await tx.wait();
     return NextResponse.json({ success: true, txHash: tx.hash });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    let errorMessage = 'Unknown Error';
+    if (
+      typeof err === 'object' &&
+      err !== null &&
+      'message' in err &&
+      typeof (err as { message?: unknown }).message === 'string'
+    ) {
+      errorMessage = (err as { message: string }).message;
+    }
+
+    return NextResponse.json({ success: false, error: errorMessage }, { status: 500 });
+
   }
 }

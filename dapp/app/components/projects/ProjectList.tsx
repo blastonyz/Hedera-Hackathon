@@ -6,7 +6,7 @@ import Loader from "../loader/Loader";
 import { forwardRef } from 'react';
 
 
-const ProjectList = forwardRef<HTMLDivElement, {}>(function ProjectList(_, ref) {
+const ProjectList = forwardRef<HTMLDivElement, unknown>(function ProjectList(_, ref) {
 
     const { projects, totalProjects, getProjects, loading, page, pages, hasNextPage, hasPrevPage } = useProjects()
 

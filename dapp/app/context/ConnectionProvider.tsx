@@ -82,11 +82,9 @@ export const ConnectionProvider = ({ children }: Props) => {
                         });
                         console.log("🔄 Switched to Hedera Testnet");
 
-                    } catch (err: any) {
-                        console.error("❌ Failed to switch network:", err);
-
+                    } catch (err: unknown) {
+                        console.log("❌ Failed to switch network:", err);
                     }
-
                 }
 
                 setMainSigner(signer);
@@ -95,7 +93,7 @@ export const ConnectionProvider = ({ children }: Props) => {
         };
 
         initProvider();
-    }, [account]);
+    }, [account, mainProvider]);
 
     const connectWallet = async () => {
         try {
@@ -119,12 +117,18 @@ export const ConnectionProvider = ({ children }: Props) => {
                 localStorage.setItem('walletAddress', address);
             }
 
-        } catch (error: any) {
-            if (error.code === 4001) {
+        } catch (error: unknown) {
+            if (
+                typeof error === 'object' &&
+                error !== null &&
+                'code' in error &&
+                (error as { code: unknown }).code === 4001
+            ) {
                 console.warn("⚠️ Usuario rechazó la conexión de la wallet.");
             } else {
                 console.error("❌ Error inesperado al conectar la wallet:", error);
             }
+
         }
 
     }

@@ -1,8 +1,6 @@
 import { Project } from '@/types/types';
 import { Contract } from 'ethers';
 
-
-
 export async function deployProject({
   name,
   symbol,
@@ -23,10 +21,10 @@ export async function deployProject({
   paymentToken: string;
   retireContract: string;
   treasury: string;
-  price: BigInt;
-  maxSupply: BigInt;
+  price: bigint;
+  maxSupply: bigint;
   metadataURI: string;
-  factoryContract: any;
+  factoryContract: Contract;
 }) {
 
   const tx = await factoryContract.createProjectClone(

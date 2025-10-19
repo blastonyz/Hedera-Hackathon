@@ -1,9 +1,9 @@
 'use client'
 import { useWallet } from "@/app/context/ConnectionProvider"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 
 const ProjectData = () => {
-    const { account, contracts, mainSigner } = useWallet()
+    const { account, contracts } = useWallet()
     const [tokenCount, setTokenCount] = useState<number | null>(null)
     const [projectsCount, setProjectsCount] = useState<number | null>(null)
     const [userProjects, setUserProjects] = useState<number | null>(null)
@@ -11,33 +11,35 @@ const ProjectData = () => {
     const retireContract = contracts.CarbonRetireNFT
     const factoryContract = contracts.CarbonFactory
 
-    const getData = async () => {
-        if (!account) {
-            console.warn("No wallet/account connected")
-            return
-        }
-        if (!retireContract || typeof retireContract.totalMinted !== 'function') {
-            console.warn('retireContract no está listo o no tiene totalMinted');
-            return;
-        }
+   
+const getData = useCallback(async () => {
+  if (!account) {
+    console.warn("No wallet/account connected");
+    return;
+  }
+  if (!retireContract || typeof retireContract.totalMinted !== "function") {
+    console.warn("retireContract no está listo o no tiene totalMinted");
+    return;
+  }
 
-        const totalMinted = await retireContract!.totalMinted();
-        console.log('minted: ', totalMinted)
-        setTokenCount(Number(totalMinted))
+  try {
+    const totalMinted = await retireContract.totalMinted();
+    setTokenCount(Number(totalMinted));
 
-        const totalProjects = await factoryContract!.totalProjects()
-        console.log('totalProj: ', totalProjects)
-        setProjectsCount(Number(totalProjects))
+    const totalProjects = await factoryContract!.totalProjects();
+    setProjectsCount(Number(totalProjects));
 
-        const ownerProjects = await factoryContract!.getOwnerProjects(account)
-        console.log('owner: ', ownerProjects.length)
-        setUserProjects(ownerProjects.length)
-    }
+    const ownerProjects = await factoryContract!.getOwnerProjects(account);
+    setUserProjects(ownerProjects.length);
+  } catch (err) {
+    console.error("Error fetching project data", err);
+  }
+}, [account, retireContract, factoryContract]);
 
     useEffect(() => {
         getData()
     }
-        , [account])
+    , [getData])
 
     return (
         <div className="relative text-white flex flex-col items-center justify-center px-4 py-10">

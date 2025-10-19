@@ -43,7 +43,7 @@ const GetTokensERC20 = () => {
             await addTokenToMetaMask()
             showToast("✅ 25k GHC tokens minted and added to MetaMask", "success")
 
-        } catch (error: any) {
+        } catch (error: unknown) {
             showToast(`${error}`, "error")
             setLoading(false)
 

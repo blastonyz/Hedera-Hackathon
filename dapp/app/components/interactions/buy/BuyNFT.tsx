@@ -14,6 +14,12 @@ type Props = {
     cid: string;
 }
 
+type EvmError = {
+  code?: number;
+  message?: string;
+  data?: Uint8Array | string;
+};
+
 const BuyNFT = ({ nftAddress, price, cid }: Props) => {
     const { mainSigner, account, contracts } = useWallet()
     const [quantity, setQuantity] = useState<number>(1);
@@ -52,18 +58,30 @@ const BuyNFT = ({ nftAddress, price, cid }: Props) => {
             const receipt = await buyBatchFunction({ carbonToken, paymentToken, account, price, cid, quantity, nftAddress });
             console.log("✅ Buy successful:", receipt);
 
-        } catch (err: any) {
+        } catch (err: unknown) {
+            const isEvmError = (e: unknown): e is EvmError =>
+    typeof e === "object" && e !== null && ("code" in e || "message" in e || "data" in e);
 
-            if (err?.code === 4001) {
-                setError("🚫 Transacción cancelada por el usuario");
-                return;
-            }
-            
-            if (err?.data && typeof err.data === "string") {
-                const reason = toUtf8String(err.data); 
-                console.log("Revert reason:", reason);
-            }
-            setError(err.message || "Buy failed");
+  if (isEvmError(err)) {
+    if (err.code === 4001) {
+      setError("🚫 Transaction cancel");
+      return;
+    }
+
+    if (err.data) {
+      try {
+        const reason = toUtf8String(err.data);
+        console.log("Revert reason:", reason);
+      } catch (decodeErr) {
+        console.warn("Failed to decode revert reason", decodeErr);
+      }
+    }
+
+    setError(err.message ?? "Buy failed");
+  } else {
+    setError("Buy failed");
+  }
+
         } finally {
             setLoading(false)
         }
@@ -71,8 +89,6 @@ const BuyNFT = ({ nftAddress, price, cid }: Props) => {
 
     return (
         <div className="flex flex-row  justify-between gap-4">
-
-
             <Button
                 onClick={buy}
                 text={'Buy Credits'}

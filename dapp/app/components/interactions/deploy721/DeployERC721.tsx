@@ -13,7 +13,6 @@ type Props = {
     project: Project;
 };
 
-
 const DeployERC721 = ({ project }: Props) => {
     const { mainProvider, account, mainSigner } = useWallet()
     const [loading, setLoading] = useState(false);
@@ -61,8 +60,6 @@ const DeployERC721 = ({ project }: Props) => {
             setError("Signer or contract address not available");
             return;
         }
-
-
         const deployParams = buildDeployParamsFromProject(
             project,
             account,
@@ -70,7 +67,6 @@ const DeployERC721 = ({ project }: Props) => {
             addrCarbonRetire,
             factoryContract
         );
-
 
         try {
             const network = await mainProvider!.getNetwork();
@@ -96,12 +92,18 @@ const DeployERC721 = ({ project }: Props) => {
                 });
                 const updateData = await updateRes.json();
                 console.log("Update project result:", updateData);
-
             }
-
-
-        } catch (err: any) {
-            setError(err.message || "Error deploying contract");
+        } catch (err: unknown) {
+            let errorMessage = 'Unknown Error';
+            if (
+                typeof err === 'object' &&
+                err !== null &&
+                'message' in err &&
+                typeof (err as { message?: unknown }).message === 'string'
+            ) {
+                errorMessage = (err as { message: string }).message;
+            }
+            setError(errorMessage || "Error deploying contract");
         } finally {
             setLoading(false);
         }
@@ -117,7 +119,7 @@ const DeployERC721 = ({ project }: Props) => {
                 loading={loading}
                 mainSigner={mainSigner}
             />
-            
+
             {result && (
                 <FloatingPopupPortal
                     message="Token deployed!"
@@ -131,7 +133,21 @@ const DeployERC721 = ({ project }: Props) => {
                     onClose={() => setResult(null)}
                 />
             )}
+            {error && (
+                <FloatingPopupPortal
+                    message={error}
+                    details={undefined}
+                    onClose={() => setError(null)}
+                />
+            )}
 
+            {toast && (
+                <FloatingPopupPortal
+                    message={toast.message}
+                    details={undefined}
+                    onClose={() => setToast(null)}
+                />
+            )}
 
         </div>
     );

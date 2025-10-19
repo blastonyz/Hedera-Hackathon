@@ -5,16 +5,25 @@ import GHToken from "@contracts/GHToken.sol/GHToken.json";
 
 
 export async function POST(request: Request) {
-    const { to, amount } = await request.json();
-    const provider = new JsonRpcProvider(process.env.HEDERA_RPC_URL);
-    const wallet = new Wallet(process.env.HEDERA_PRIVATE_KEY || "", provider);
-    const token = new Contract(addrGHToken, GHToken.abi, wallet);
-    try {
+  const { to, amount } = await request.json();
+  const provider = new JsonRpcProvider(process.env.HEDERA_RPC_URL);
+  const wallet = new Wallet(process.env.HEDERA_PRIVATE_KEY || "", provider);
+  const token = new Contract(addrGHToken, GHToken.abi, wallet);
+  try {
     const tx = await token.mint(to, amount);
     await tx.wait();
     return NextResponse.json({ success: true, txHash: tx.hash });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    let errorMessage = "Unknown Error"
+    if (
+      typeof err === 'object' &&
+      err !== null &&
+      'message' in err &&
+      typeof (err as { message?: unknown }).message === 'string'
+    ) {
+      errorMessage = (err as { message: string }).message;
+    }
+    return NextResponse.json({ success: false, error: errorMessage }, { status: 500 });
   }
 
 }

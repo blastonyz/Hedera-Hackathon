@@ -1,5 +1,5 @@
 import { Project } from "@/types/types";
-//import ProjectsEvents from "../interactions/events/ProjectsEvents";
+import Image from "next/image";
 
 interface ProjectDetailProps {
   project: Project;
@@ -25,9 +25,11 @@ const ProjectDetailsCard = ({ project }: ProjectDetailProps) => {
   <h2 className="text-2xl font-semibold mb-4">{name}</h2>
 
   {satelliteImage?.url && (
-    <img
+    <Image
       src={satelliteImage.url}
       alt={satelliteImage.caption || "Satellite image"}
+      width={720}
+      height={400}
       className="w-full rounded-lg mb-4"
     />
   )}
@@ -71,9 +73,6 @@ const ProjectDetailsCard = ({ project }: ProjectDetailProps) => {
     </a>
   </p>
 
-     {/*project.contractAddress &&
-        <ProjectsEvents projectAddress={project.contractAddress} />
-      */}
 </div>
     );
 
