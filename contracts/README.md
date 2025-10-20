@@ -1,3 +1,42 @@
+# 🌱 GreenHouse: Modular Carbon Credit Tokenization
+
+GreenHouse is a simulation platform for tokenizing verified carbon offset projects. It combines modular smart contracts with a perceptually polished dapp that allows users to purchase, retire, and certify carbon credits as dynamic NFTs.
+
+---
+
+## 🧱 Smart Contract Architecture
+
+### 🔹 `GHCoin` (ERC-20)
+- Fungible token used as internal currency.
+- Enables users to purchase carbon credit NFTs.
+
+### 🔹 `CarbonCreditNFT` (ERC-721)
+- Represents individual carbon credits.
+- Each token is linked to a verified carbon project.
+- Can be retired (burned) to offset emissions.
+- implements admin & minter roles with AccessControl
+- ERC-721 uri storage for gas optimization (lower than enumerable)
+
+![Carbon Project NFT](https://red-voluntary-sole-224.mypinata.cloud/ipfs/bafkreiawez4ufmfkuijtf7rsxxbicx7sbrufdihmpnnydf3h6b7jnctupe)
+
+
+### 🔹 `RetirementCertificateNFT` (ERC-721)
+- Automatically minted when a credit is retired.
+- Contains dynamic metadata reflecting total CO₂ retired.
+- Serves as an on-chain proof of carbon offset.
+- ERC-721 uri storage for gas optimization (lower than enumerable)
+- attached metadata for this mvp, could be dinamic
+![Carbon Project NFT](https://red-voluntary-sole-224.mypinata.cloud/ipfs/bafkreiehhqfe6zwvgzbgppcz3pk2hntodpgwvfeyylwfuwf7rzceb35ibe)
+
+
+### 🔹 `CarbonProjectFactory` (EIP-1167)
+- Clones instances of `CarbonCreditNFT` per project.
+- Enables scalable issuance of credits without duplicating logic.
+- Each clone has its own metadata and supply.
+
+---
+
+
 # Sample Hardhat 3 Beta Project (`mocha` and `ethers`)
 
 This project showcases a Hardhat 3 Beta project using `mocha` for tests and the `ethers` library for Ethereum interactions.
