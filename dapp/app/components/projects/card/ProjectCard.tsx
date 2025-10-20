@@ -54,7 +54,7 @@ const ProjectCard = ({ project }: Props) => {
               <TrendingUp className="w-4 h-4 text-violet-400" />
               <span className="text-sm font-medium text-lime-500">Supply</span>
             </div>
-            <p className="text-whitefont-semibold">{project.stats?.totalSupply.toFixed(2) || "N/A"}</p>
+            <p className="text-white font-semibold">{project.stats?.totalSupply.toFixed(2) || "N/A"}</p>
           </div>
 
           <div className="p-3 border border-[rgb(200,200,200,0.6)] rounded-lg">
