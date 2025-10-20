@@ -29,30 +29,40 @@ const Hero = ({ scrollToRef }: HeroProps) => {
     const card3Ref = useRef<HTMLDivElement | null>(null)
     const card4Ref = useRef<HTMLDivElement | null>(null)
 
-    useEffect(() => {
-        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
-        tl.from(titleRef.current, { y: -50, opacity: 0, duration: 1 })
-            .from(subtitleRef.current, { y: 20, opacity: 0, duration: 0.8 }, '-=0.6')
-            .from(buttonRef.current, { scale: 0.8, opacity: 0, duration: 0.6 }, '-=0.4')
+ useEffect(() => {
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-        const cards: (HTMLDivElement)[] = []
-        if (card1Ref.current) cards.push(card1Ref.current)
-        if (card2Ref.current) cards.push(card2Ref.current)
-        if (card3Ref.current) cards.push(card3Ref.current)
-        if (card4Ref.current) cards.push(card4Ref.current)
+  if (titleRef.current) {
+    tl.from(titleRef.current, { y: -50, opacity: 0, duration: 1 });
+  }
+  if (subtitleRef.current) {
+    tl.from(subtitleRef.current, { y: 20, opacity: 0, duration: 0.8 }, '-=0.6');
+  }
+  if (buttonRef.current) {
+    tl.from(buttonRef.current, { scale: 0.8, opacity: 0, duration: 0.6 }, '-=0.4');
+  }
 
-        cards.forEach((card) => {
-            gsap.from(card, {
-                scrollTrigger: {
-                    trigger: card,
-                    start: 'top 80%',
-                },
-                y: 50,
-                opacity: 0,
-                duration: 1,
-            })
-        })
-    }, [])
+  const cards = [card1Ref.current, card2Ref.current, card3Ref.current, card4Ref.current].filter(Boolean);
+
+  cards.forEach((card) => {
+    gsap.from(card, {
+      scrollTrigger: {
+        trigger: card,
+        start: 'top 80%',
+      },
+      y: 50,
+      opacity: 0,
+      duration: 1,
+    });
+  });
+
+  ScrollTrigger.refresh(); // 🧠 recalcula triggers
+
+  return () => {
+    tl.kill();
+    ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+  };
+}, []);
 
     return (
         <section className="relative min-h-screen text-white flex flex-col items-center justify-center px-4 pt-24">

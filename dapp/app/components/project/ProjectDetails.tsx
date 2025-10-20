@@ -1,16 +1,17 @@
 'use client';
 import ProjectDetail from "@/app/components/project/ProjectDetailsCard";
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useEffect, useState } from "react";
 import { useProjects } from "@/app/context/ProjectsProvider";
 import { Project } from "@/types/types";
-import { Router } from "lucide-react";
 import { useRouter } from "next/navigation";
-
 
 interface Props {
     id: string;
 }
 
+gsap.registerPlugin(ScrollTrigger)
 
 const ProjectDetailContainer = ({ id }: Props) => {
   const { selectProject } = useProjects();
@@ -18,6 +19,14 @@ const ProjectDetailContainer = ({ id }: Props) => {
   const [loading, setLoading] = useState(true);
 
   const router = useRouter()
+
+  const handleBack = () => {
+    router.back()
+    setTimeout(() => {
+      ScrollTrigger.refresh()
+      window.location.reload()
+    }, 300) 
+  }
 
   useEffect(() => {
     const result = selectProject(id);
@@ -33,7 +42,13 @@ const ProjectDetailContainer = ({ id }: Props) => {
     
       <ProjectDetail project={project} />
 
-      <button onClick={()=>router.back()}>{'< back'}</button>
+       <button
+      onClick={handleBack}
+      className="px-4 py-2 bg-lime-500 text-white rounded hover:bg-green-400 transition"
+    >
+      ← Back
+    </button>
+
     </div>
   );
 };

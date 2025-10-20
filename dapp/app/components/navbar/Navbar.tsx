@@ -11,32 +11,37 @@ const Navbar = () => {
     <nav className="flex flex-row justify-between px-4 py-2 bg-gray-300/7 backdrop-blur-md z-10 fixed w-full">
       <div className="flex flex-row">
         <Image src="/logo.png" alt="greenhouse logo" width={135} height={50} className="ml-10" />
-        
-        <a href="https://docs.google.com/presentation/d/1HqkKTVukGxRcYJt5YJQoGHyDrRAwCQVXt_vx2shYMVE/present?slide=id.p1"
-          target="_blank"
-          className="px-4 py-4 text-lime-500 italic"
-          rel="noopener noreferrer"
-        >
-          Pitch
-        </a>
 
-        <a
-         href="https://explore.hashpack.app/nft/0.0.3872504/4062" 
-         className="px-4 py-4 text-lime-500 italic"
-         target="_blank"
-         rel="noopener noreferrer"
-        >
-          Certification
-        </a>
+        <div className="flex flex-row ml-10">
+          
+          <a href="https://docs.google.com/presentation/d/1HqkKTVukGxRcYJt5YJQoGHyDrRAwCQVXt_vx2shYMVE/present?slide=id.p1"
+            target="_blank"
+            className="px-4 py-4 text-lime-500 italic"
+            rel="noopener noreferrer"
+          >
+            Pitch
+          </a>
 
-        <a 
-        href="https://drive.google.com/file/d/1KJfMpLdzgrAnWMo9sVoD898jwpJHtZDj/view?t=1" 
-        className="px-4 py-4 text-lime-500 italic"
-        target="_blank"
-        rel="noopener noreferrer"
-        >
-          Demo
-        </a>
+          <a
+            href="https://explore.hashpack.app/nft/0.0.3872504/4062"
+            className="px-4 py-4 text-lime-500 italic"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Certification
+          </a>
+
+          <a
+            href="https://drive.google.com/file/d/1KJfMpLdzgrAnWMo9sVoD898jwpJHtZDj/view?t=1"
+            className="px-4 py-4 text-lime-500 italic"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Demo
+          </a>
+        </div>
+
+
       </div>
 
 
