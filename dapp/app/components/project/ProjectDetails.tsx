@@ -3,6 +3,8 @@ import ProjectDetail from "@/app/components/project/ProjectDetailsCard";
 import { useEffect, useState } from "react";
 import { useProjects } from "@/app/context/ProjectsProvider";
 import { Project } from "@/types/types";
+import { Router } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 
 interface Props {
@@ -15,6 +17,8 @@ const ProjectDetailContainer = ({ id }: Props) => {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const router = useRouter()
+
   useEffect(() => {
     const result = selectProject(id);
     setProject(result);
@@ -26,8 +30,10 @@ const ProjectDetailContainer = ({ id }: Props) => {
 
   return (
     <div className="max-w-4xl mx-auto py-12">
-      <h2 className="text-3xl font-bold text-center mb-8 text-green-700">Project Details</h2>
+    
       <ProjectDetail project={project} />
+
+      <button onClick={()=>router.back()}>{'< back'}</button>
     </div>
   );
 };

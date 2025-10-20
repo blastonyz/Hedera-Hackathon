@@ -4,6 +4,7 @@ import "./globals.css";
 import { ProjectsProvider } from "./context/ProjectsProvider";
 import { ConnectionProvider } from "./context/ConnectionProvider";
 import Navbar from "./components/navbar/Navbar";
+import Shader from "./components/ui/shader/Shader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({
         <ProjectsProvider>
           <ConnectionProvider>
             <Navbar />
+            <Shader/>
             {children}
           </ConnectionProvider>
         </ProjectsProvider>
