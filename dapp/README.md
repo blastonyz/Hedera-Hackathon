@@ -1,3 +1,55 @@
+# 🌱 GreenHouse Dapp Frontend
+
+This is the frontend interface for **GreenHouse**, a modular carbon credit tokenization platform. It allows users to interact with smart contracts, explore verified carbon projects, purchase and retire credits, and deploy nft colections with metadata of this projects
+
+---
+
+## 🚀 Features
+
+- 🔗 Connect wallet via MetaMask
+- 🧠 Sync off-chain project data from MongoDB
+- 📦 Upload project metadata to IPFS via Pinata
+- 🎨 GSAP-powered perceptual animations
+- 🌌 Shader-based background with Three.js
+- 🧾 Dynamic NFT previews and retirement certificates
+
+---
+
+## 🧩 Tech Stack
+
+### 🖥️ Framework
+
+- **Next.js 15.5.4** with Turbopack
+- **React 19.1.0**
+- **TypeScript 5**
+- **TailwindCSS 4**
+
+### 🔌 Web3 & Wallet
+
+- **Ethers.js 6.15.0** for smart contract interaction
+- **@metamask/providers** for wallet connection
+- **Custom React Context** for wallet state management
+
+### 🧠 Off-chain Data
+
+- **MongoDB** via **Mongoose 8.18.2**
+- **mongoose-paginate-v2** for efficient project listing
+- Projects are stored and synced off-chain for performance and flexibility
+
+### 📦 IPFS Integration
+
+- **Pinata SDK 2.5.0** used to upload project metadata and images to IPFS
+- Metadata is generated dynamically and pinned during deployment
+
+### 🎨 Visual & UX
+
+- **GSAP 3.13.0** for perceptual animations (entrance, scroll, feedback)
+- **Three.js 0.180.0** + **React Three Fiber** for shader-based backgrounds
+- **@react-three/drei** for camera, lighting, and helpers
+- **Lucide-react** for icons
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
