@@ -8,7 +8,7 @@ GreenHouse is a simulation platform for tokenizing verified carbon offset projec
 
 My current certification is certified via HashPack:
 
-🔗 [Carbon Credit NFT Certification](https://explore.hashpack.app/nft/0.0.3872504/4062)
+🔗 [Hedera Hashgraph Developer NFT Certification](https://explore.hashpack.app/nft/0.0.3872504/4062)
 
 
 
