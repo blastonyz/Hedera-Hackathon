@@ -1,4 +1,4 @@
 export const addrGHToken = '0xE9E032046299389922c4bf2Fa4562D09f37c83bF'
-export const addrCarbonRetire = '0x5566a79BCB8DbAD31f0628bA805148Aaaba3685c'
-export const addrCarbonProject = '0xE61FDd8e61C97f5D2C30aF639Ce3224275de8D6B'
-export const addrCarbonFactory = '0x9D13AEe1f1c857d5F1F24c03A917117744424122'
+export const addrCarbonRetire = '0xa0E089Cfb5e0CA699E77fB8362666692Dbe9c6E6'
+export const addrCarbonProject = '0x8A88049D153b3dA0971B8436b183316171ce288c'
+export const addrCarbonFactory = '0x2cabEB0A9E3163d0B74E26241bEFE3350EE120d3'

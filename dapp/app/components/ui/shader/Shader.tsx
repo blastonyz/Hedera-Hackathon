@@ -41,13 +41,13 @@ function ShaderPlane() {
 
             vec4 o = vec4(0.0);
 
-            for (; i++ < 32.;) {
+            for (; i++ < 24.;) {
                 p = vec3(u*d, d+t);
                 e = orb(p)-.1;
                 p.xy *= mat2(cos(.1*t + p.z/8. + vec4(0,33,11,0)));
                 s = 4. - abs(p.y);
                 a = .8;
-                for (; a < 32.; a += a) {
+                for (; a < 24.; a += a) {
                     p += cos(.7*t + p.yzx)*.2;
                     s -= abs(dot(sin(.1*t + p * a), .6 + p - p)) / a;
                 }
