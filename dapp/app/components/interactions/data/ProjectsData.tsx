@@ -48,7 +48,7 @@ const getData = useCallback(async () => {
       setIsLoading(false);
       return;
     }
-  } catch (err) {
+  } catch {
     // Can't get account from signer - don't proceed
     setTokenCount(0);
     setProjectsCount(0);
@@ -75,9 +75,10 @@ const getData = useCallback(async () => {
     try {
       const totalMinted = await retireContract.totalMinted();
       setTokenCount(Number(totalMinted));
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Silently handle BAD_DATA errors - they're expected when contract isn't deployed
-      if (err?.code === 'BAD_DATA' || err?.message?.includes('decode') || err?.message?.includes('0x')) {
+      const error = err as { code?: string; message?: string };
+      if (error?.code === 'BAD_DATA' || error?.message?.includes('decode') || error?.message?.includes('0x')) {
         setTokenCount(0);
       } else {
         console.error("Error fetching totalMinted:", err);
@@ -89,9 +90,10 @@ const getData = useCallback(async () => {
     try {
       const totalProjects = await factoryContract.totalProjects();
       setProjectsCount(Number(totalProjects));
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Silently handle BAD_DATA errors
-      if (err?.code === 'BAD_DATA' || err?.message?.includes('decode') || err?.message?.includes('0x')) {
+      const error = err as { code?: string; message?: string };
+      if (error?.code === 'BAD_DATA' || error?.message?.includes('decode') || error?.message?.includes('0x')) {
         setProjectsCount(0);
       } else {
         console.error("Error fetching totalProjects:", err);
@@ -104,9 +106,10 @@ const getData = useCallback(async () => {
       try {
         const ownerProjects = await factoryContract.getOwnerProjects(signerAccount);
         setUserProjects(ownerProjects.length);
-      } catch (err: any) {
+      } catch (err: unknown) {
         // Silently handle BAD_DATA errors
-        if (err?.code === 'BAD_DATA' || err?.message?.includes('decode') || err?.message?.includes('0x')) {
+        const error = err as { code?: string; message?: string };
+        if (error?.code === 'BAD_DATA' || error?.message?.includes('decode') || error?.message?.includes('0x')) {
           setUserProjects(0);
         } else {
           console.error("Error fetching ownerProjects:", err);
@@ -116,16 +119,17 @@ const getData = useCallback(async () => {
     } else {
       setUserProjects(0);
     }
-  } catch (err: any) {
+  } catch (err: unknown) {
     // Only log unexpected errors
-    if (err?.code !== 'BAD_DATA' && !err?.message?.includes('decode') && !err?.message?.includes('0x')) {
+    const error = err as { code?: string; message?: string };
+    if (error?.code !== 'BAD_DATA' && !error?.message?.includes('decode') && !error?.message?.includes('0x')) {
       console.error("Unexpected error fetching project data:", err);
-      setError(err?.message || "Failed to fetch data");
+      setError(error?.message || "Failed to fetch data");
     }
   } finally {
     setIsLoading(false);
   }
-}, [account, retireContract, factoryContract, mainProvider, mainSigner, isReady]);
+}, [account, retireContract, factoryContract, mainSigner, isReady]);
 
     useEffect(() => {
        

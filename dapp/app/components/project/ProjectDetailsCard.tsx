@@ -1,6 +1,6 @@
 import { Project } from "@/types/types";
 import Image from "next/image";
-import { MapPin, DollarSign, Leaf, TrendingUp, ExternalLink } from "lucide-react";
+import { MapPin, DollarSign, Leaf, TrendingUp, ExternalLink, ArrowRight } from "lucide-react";
 
 interface ProjectDetailProps {
   project: Project;
