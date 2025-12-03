@@ -3,43 +3,143 @@ import { useWallet } from "@/app/context/ConnectionProvider"
 import { useState, useEffect, useCallback } from "react"
 
 const ProjectData = () => {
-    const { account, contracts } = useWallet()
-    const [tokenCount, setTokenCount] = useState<number | null>(null)
-    const [projectsCount, setProjectsCount] = useState<number | null>(null)
-    const [userProjects, setUserProjects] = useState<number | null>(null)
+    const { account, contracts, mainProvider, mainSigner } = useWallet()
+    const [tokenCount, setTokenCount] = useState<number>(0)
+    const [projectsCount, setProjectsCount] = useState<number>(0)
+    const [userProjects, setUserProjects] = useState<number>(0)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [error, setError] = useState<string | null>(null)
 
-    const retireContract = contracts.CarbonRetireNFT
-    const factoryContract = contracts.CarbonFactory
+    const retireContract = contracts?.CarbonRetireNFT
+    const factoryContract = contracts?.CarbonFactory
+    
+    // Check if we have all required dependencies
+    const isReady = !!account && !!mainProvider && !!mainSigner && !!retireContract && !!factoryContract
 
    
 const getData = useCallback(async () => {
-  if (!account) {
-    console.warn("No wallet/account connected");
+  
+  if (!isReady) {
+    setTokenCount(0);
+    setProjectsCount(0);
+    setUserProjects(0);
+    setIsLoading(false);
+    setError(null);
     return;
   }
-  if (!retireContract || typeof retireContract.totalMinted !== "function") {
-    console.warn("retireContract no está listo o no tiene totalMinted");
+
+  setError(null);
+
+  // Verify account from signer matches context account
+  let signerAccount: string;
+  try {
+    signerAccount = await mainSigner.getAddress();
+    if (!signerAccount 
+      || signerAccount.toLowerCase() !== account.toLowerCase() ||
+      !mainSigner || !account 
+      || !retireContract 
+      || !factoryContract
+      || !retireContract.totalMinted 
+      || !factoryContract.totalProjects
+    ) {
+      setTokenCount(0);
+      setProjectsCount(0);
+      setUserProjects(0);
+      setIsLoading(false);
+      return;
+    }
+  } catch (err) {
+    // Can't get account from signer - don't proceed
+    setTokenCount(0);
+    setProjectsCount(0);
+    setUserProjects(0);
+    setIsLoading(false);
     return;
   }
+
+
+  // Validate contract methods exist
+  if (typeof retireContract.totalMinted !== "function" || 
+      typeof factoryContract.totalProjects !== "function") {
+    setTokenCount(0);
+    setProjectsCount(0);
+    setUserProjects(0);
+    setIsLoading(false);
+    return;
+  }
+
+  setIsLoading(true);
 
   try {
-    const totalMinted = await retireContract.totalMinted();
-    setTokenCount(Number(totalMinted));
+    // Fetch totalMinted with error handling
+    try {
+      const totalMinted = await retireContract.totalMinted();
+      setTokenCount(Number(totalMinted));
+    } catch (err: any) {
+      // Silently handle BAD_DATA errors - they're expected when contract isn't deployed
+      if (err?.code === 'BAD_DATA' || err?.message?.includes('decode') || err?.message?.includes('0x')) {
+        setTokenCount(0);
+      } else {
+        console.error("Error fetching totalMinted:", err);
+        setTokenCount(0);
+      }
+    }
 
-    const totalProjects = await factoryContract!.totalProjects();
-    setProjectsCount(Number(totalProjects));
+    // Fetch totalProjects with error handling
+    try {
+      const totalProjects = await factoryContract.totalProjects();
+      setProjectsCount(Number(totalProjects));
+    } catch (err: any) {
+      // Silently handle BAD_DATA errors
+      if (err?.code === 'BAD_DATA' || err?.message?.includes('decode') || err?.message?.includes('0x')) {
+        setProjectsCount(0);
+      } else {
+        console.error("Error fetching totalProjects:", err);
+        setProjectsCount(0);
+      }
+    }
 
-    const ownerProjects = await factoryContract!.getOwnerProjects(account);
-    setUserProjects(ownerProjects.length);
-  } catch (err) {
-    console.error("Error fetching project data", err);
+    // Fetch user projects with error handling - only if account exists
+    if (signerAccount && typeof factoryContract.getOwnerProjects === "function") {
+      try {
+        const ownerProjects = await factoryContract.getOwnerProjects(signerAccount);
+        setUserProjects(ownerProjects.length);
+      } catch (err: any) {
+        // Silently handle BAD_DATA errors
+        if (err?.code === 'BAD_DATA' || err?.message?.includes('decode') || err?.message?.includes('0x')) {
+          setUserProjects(0);
+        } else {
+          console.error("Error fetching ownerProjects:", err);
+          setUserProjects(0);
+        }
+      }
+    } else {
+      setUserProjects(0);
+    }
+  } catch (err: any) {
+    // Only log unexpected errors
+    if (err?.code !== 'BAD_DATA' && !err?.message?.includes('decode') && !err?.message?.includes('0x')) {
+      console.error("Unexpected error fetching project data:", err);
+      setError(err?.message || "Failed to fetch data");
+    }
+  } finally {
+    setIsLoading(false);
   }
-}, [account, retireContract, factoryContract]);
+}, [account, retireContract, factoryContract, mainProvider, mainSigner, isReady]);
 
     useEffect(() => {
-        getData()
-    }
-    , [getData])
+       
+        if (isReady) {
+            getData();
+        } else {
+            // Reset values when conditions aren't met
+            setTokenCount(0);
+            setProjectsCount(0);
+            setUserProjects(0);
+            setError(null);
+            setIsLoading(false);
+        }
+    }, [isReady, getData])
 
     return (
         <div className="relative text-white flex flex-col items-center justify-center px-4 py-10">
@@ -52,9 +152,9 @@ const getData = useCallback(async () => {
                 }}
             />
 
-            <div className="flex flex-col lg:flex-row gap-12 w-full max-w-6xl px-4">
-                <div className="flex flex-col justify-between bg-white/10 backdrop-blur-md border border-lime-500 rounded-xl shadow-lg py-12 px-10 hover:animate-glow transition-transform">
-                    <h2 className="flex items-center gap-2 text-[48px] font-bold text-lime-500 mb-8">
+            <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-12 w-full max-w-6xl px-4">
+                <div className="flex flex-col justify-between bg-white/10 backdrop-blur-md border border-lime-500 rounded-xl shadow-lg py-8 sm:py-10 lg:py-12 px-6 sm:px-8 lg:px-10 hover:animate-glow transition-transform">
+                    <h2 className="flex flex-col sm:flex-row items-center justify-center sm:gap-2 text-3xl sm:text-4xl lg:text-[48px] font-bold text-lime-500 mb-6 sm:mb-8">
                         <span className="text-violet-400">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -73,22 +173,32 @@ const getData = useCallback(async () => {
                         </span>
                         On-Chain Data
                     </h2>
-                    <div className="flex justify-between items-center text-xl text-white">
-                        <span>Metrics Tons of CO₂ Retired:</span>
-                        <span className="text-right text-white text-3xl font-bold drop-shadow-[0_0_2px_violet]">
-                            {tokenCount ?? 0} tn
+                    {error && (
+                        <div className="mb-4 p-3 rounded-lg bg-yellow-500/20 border border-yellow-500/50">
+                            <p className="text-sm text-yellow-400">{error}</p>
+                        </div>
+                    )}
+                    {isLoading && (
+                        <div className="mb-4 p-3 rounded-lg bg-blue-500/20 border border-blue-500/50">
+                            <p className="text-sm text-blue-400">Loading data...</p>
+                        </div>
+                    )}
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 text-base sm:text-lg lg:text-xl text-white mb-4">
+                        <span className="text-sm sm:text-base lg:text-xl">Metrics Tons of CO₂ Retired:</span>
+                        <span className="text-right text-white text-2xl sm:text-3xl font-bold drop-shadow-[0_0_2px_violet]">
+                            {isLoading ? "..." : (tokenCount ?? 0)} tn
                         </span>
                     </div>
-                    <div className="flex justify-between items-center text-xl text-white">
-                        <span>Total Projects Tokenized:</span>
-                        <span className="text-right text-white text-3xl font-bold drop-shadow-[0_0_2px_violet]">
-                            {projectsCount ?? 0}
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 text-base sm:text-lg lg:text-xl text-white mb-4">
+                        <span className="text-sm sm:text-base lg:text-xl">Total Projects Tokenized:</span>
+                        <span className="text-right text-white text-2xl sm:text-3xl font-bold drop-shadow-[0_0_2px_violet]">
+                            {isLoading ? "..." : (projectsCount ?? 0)}
                         </span>
                     </div>
-                    <div className="flex justify-between items-center text-xl text-white">
-                        <span>Projects Owned:</span>
-                        <span className="text-right text-white text-3xl font-bold drop-shadow-[0_0_2px_violet]">
-                            {userProjects ?? 0}
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 text-base sm:text-lg lg:text-xl text-white">
+                        <span className="text-sm sm:text-base lg:text-xl">Projects Owned:</span>
+                        <span className="text-right text-white text-2xl sm:text-3xl font-bold drop-shadow-[0_0_2px_violet]">
+                            {isLoading ? "..." : (userProjects ?? 0)}
                         </span>
                     </div>
                 </div>

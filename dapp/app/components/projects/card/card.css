@@ -1,17 +1,55 @@
-.card-hover-glow:hover {
-  animation: glow-shadow 0.7s ease-in-out forwards;
+.project-card {
+  position: relative;
+  transform-style: preserve-3d;
 }
 
-@keyframes glow-shadow {
-  0% {
-    box-shadow: 0 0 0px rgb(0, 255, 42);
+.project-card::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(135deg, rgba(155, 225, 13, 0.3), rgba(139, 92, 246, 0.3), rgba(155, 225, 13, 0.3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: -1;
+}
+
+.project-card:hover::before {
+  opacity: 1;
+}
+
+.project-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(155, 225, 13, 0.2),
+    0 0 40px rgba(155, 225, 13, 0.15),
+    0 0 80px rgba(139, 92, 246, 0.1);
+}
+
+.project-card {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced glow animation */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(155, 225, 13, 0.2),
+      0 0 40px rgba(155, 225, 13, 0.1);
   }
   50% {
-    box-shadow: 0 0 15px rgba(1, 226, 16, 0.6);
-    transform: scale(1.02);
+    box-shadow: 
+      0 0 30px rgba(155, 225, 13, 0.4),
+      0 0 60px rgba(155, 225, 13, 0.2),
+      0 0 90px rgba(139, 92, 246, 0.1);
   }
-  100% {
-    box-shadow: 0 0 30px rgb(86, 197, 34);
-    transform: scale(1.02);
-  }
+}
+
+.project-card:hover {
+  animation: pulse-glow 2s ease-in-out infinite;
 }

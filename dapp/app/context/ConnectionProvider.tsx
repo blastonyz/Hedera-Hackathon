@@ -69,26 +69,43 @@ export const ConnectionProvider = ({ children }: Props) => {
     useEffect(() => {
         const initProvider = async () => {
             if (typeof window !== 'undefined' && window.ethereum && account && !mainProvider) {
-                const provider = new BrowserProvider(window.ethereum);
-                setMainProvider(provider);
+                try {
+                    const provider = new BrowserProvider(window.ethereum);
+                    setMainProvider(provider);
 
-                const signer = await provider.getSigner();
-                const network = await signer.provider.getNetwork();
-                if (Number(network.chainId) !== 296) {
-                    try {
-                        await window.ethereum.request({
-                            method: "wallet_switchEthereumChain",
-                            params: [{ chainId: "0x128" }], // 296 en hexadecimal
-                        });
-                        console.log("🔄 Switched to Hedera Testnet");
+                    const signer = await provider.getSigner();
+                    const network = await signer.provider.getNetwork();
+                    if (Number(network.chainId) !== 296) {
+                        try {
+                            await window.ethereum.request({
+                                method: "wallet_switchEthereumChain",
+                                params: [{ chainId: "0x128" }], // 296 en hexadecimal
+                            });
+                            console.log("🔄 Switched to Hedera Testnet");
 
-                    } catch (err: unknown) {
-                        console.log("❌ Failed to switch network:", err);
+                        } catch (err: unknown) {
+                            console.log("❌ Failed to switch network:", err);
+                        }
+                    }
+
+                    setMainSigner(signer);
+
+                } catch (error: unknown) {
+                    // Handle user rejection gracefully
+                    if (
+                        typeof error === 'object' &&
+                        error !== null &&
+                        'code' in error &&
+                        ((error as { code: unknown }).code === 4001 || (error as { code: string }).code === 'ACTION_REJECTED')
+                    ) {
+                        console.warn("⚠️ Usuario rechazó la conexión de la wallet en initProvider.");
+                        // Clear account if user rejects during init
+                        setAccount(null);
+                        localStorage.removeItem('walletAddress');
+                    } else {
+                        console.error("❌ Error inesperado al inicializar provider:", error);
                     }
                 }
-
-                setMainSigner(signer);
-
             }
         };
 
